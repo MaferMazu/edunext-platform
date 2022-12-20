@@ -1491,8 +1491,12 @@ class ProgressPageTests(ProgressPageBaseTests):
             course_grade.summary = {'grade': 'Pass', 'percent': 0.75, 'section_breakdown': [],
                                     'grade_breakdown': {}}
             resp = self._get_progress_page()
+            print(resp)
+            print(str(resp))
+            print(resp.__dict__)
             self.assertNotContains(resp, "Certificate unavailable")
             self.assertContains(resp, "Your certificate is available")
+            assert False
 
     @patch.dict('django.conf.settings.FEATURES', {'CERTIFICATES_HTML_VIEW': True})
     def test_view_certificate_link(self):
