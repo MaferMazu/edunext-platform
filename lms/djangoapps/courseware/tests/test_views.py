@@ -1469,12 +1469,14 @@ class ProgressPageTests(ProgressPageBaseTests):
         If user has already generated a certificate, it should be visible in case of user being
         unverified too.
         """
-        GeneratedCertificateFactory.create(
+        cert = GeneratedCertificateFactory.create(
             user=self.user,
             course_id=self.course.id,
             status=CertificateStatuses.downloadable,
             mode='verified'
         )
+        resp = self._get_progress_page()
+        self.assertContains(resp, "Your certificate is available")
 
         # Enable the feature, but do not enable it for this course
         CertificateGenerationConfiguration(enabled=True).save()
@@ -1491,6 +1493,12 @@ class ProgressPageTests(ProgressPageBaseTests):
             course_grade.summary = {'grade': 'Pass', 'percent': 0.75, 'section_breakdown': [],
                                     'grade_breakdown': {}}
             resp = self._get_progress_page()
+            print(resp)
+            print(str(resp))
+            print(cert)
+            print(cert.status)
+            print(resp.__dict__)
+            self.assertContains(resp, "Your certificate is available")
             self.assertNotContains(resp, "Certificate unavailable")
             self.assertContains(resp, "Your certificate is available")
 
